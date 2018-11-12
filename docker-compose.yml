@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  app:
+    hostname: app
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    stdin_open: true
+    tty: true
+
+    links:
+      - db
+
+    depends_on:
+      - db
+
+    volumes:
+      - ./code/:/hellofresh  # mount current directory inside container
+      - ./data/:/data  # mount current directory inside container
+
+  db:
+    image: postgres:9.4
+    hostname: db
+    environment:
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=app_db
+    ports:
+      - "5432:5432"
