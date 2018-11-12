@@ -1,37 +1,22 @@
-import psycopg2
+from db import DBFactory
 
 
 class DataLoad(object):
 
-    def __init__(self):
-        self.conn = psycopg2.connect(
-            dbname='app_db',
-            user='app_user',
-            password=123456,
-            host='db',
-            port=5432
-        )
-
-        self.cursor = self.conn.cursor()
+    def __init__(self, db_conn):
+        self.db_conn = db_conn
 
     def execute(self):
-
-        query = '''
-            CREATE TABLE DEPARTMENT(
-               id INT PRIMARY KEY      NOT NULL,
-               name          CHAR(50)  NOT NULL,
-               email         INT       NOT NULL,
-               inserted_at   TIMESTAMPTZ DEFAULT NOW(),
-               updated_at    TIMESTAMPTZ DEFAULT NOW()
-);
-        '''
-
-        self.cursor.execute(query)
-        self.conn.commit()
-
+        self.db_conn.execute(
+            'SELECT * FROM users'
+        )
 
 if __name__ == '__main__':
-    loader = DataLoad()
+
+    db = DBFactory.create('sqlite')
+
+    loader = DataLoad(db)
     loader.execute()
+
     print 'done'
 
