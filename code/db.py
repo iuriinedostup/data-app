@@ -44,9 +44,9 @@ class PostgresDB(CommonDB):
             CREATE TABLE IF NOT EXISTS users (
                id INT PRIMARY KEY      NOT NULL,
                name          CHAR(50)  NOT NULL,
-               email         INT       NOT NULL,
-               inserted_at   TIMESTAMPTZ DEFAULT NOW(),
-               updated_at    TIMESTAMPTZ DEFAULT NOW()
+               email         CHAR(100) NOT NULL,
+               inserted_at   INT,
+               updated_at    INT
             );
         '''
 
@@ -69,9 +69,9 @@ class SQLiteDB(CommonDB):
                     CREATE TABLE IF NOT EXISTS users (
                        id INT PRIMARY KEY      NOT NULL,
                        name          CHAR(50)  NOT NULL,
-                       email         INT       NOT NULL,
-                       inserted_at   TIMESTAMPTZ DEFAULT,
-                       updated_at    TIMESTAMPTZ DEFAULT
+                       email         INT(100)  NOT NULL,
+                       inserted_at   INT,
+                       updated_at    INT
                     );
                 '''
 
