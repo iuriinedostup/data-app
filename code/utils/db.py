@@ -1,5 +1,6 @@
 import psycopg2
 import sqlite3
+import os
 
 
 class CommonDB(object):
@@ -17,9 +18,17 @@ class CommonDB(object):
 
         self.conn.commit()
 
+    def copy_from(self, fh, table, sep):
+
+        raise NotImplementedError
+
     def init(self):
 
         raise NotImplementedError
+
+    def close(self):
+
+        self.conn.close()
 
 
 class PostgresDB(CommonDB):
@@ -40,18 +49,24 @@ class PostgresDB(CommonDB):
 
     def init(self):
 
-        query = '''
-            CREATE TABLE IF NOT EXISTS users (
-               id INT PRIMARY KEY      NOT NULL,
-               name          CHAR(50)  NOT NULL,
-               email         CHAR(100) NOT NULL,
-               inserted_at   INT,
-               updated_at    INT
-            );
-        '''
+        pwd = os.path.dirname(__file__)
+        file_name = 'ddl.sql'
+        file_path = os.path.join(
+            pwd,
+            '..',
+            'sql',
+            file_name
+        )
 
-        self.execute(query)
+        with open(file_path, 'r') as fh:
+            reader = fh.read()
+            self.execute(reader)
+
         self.commit()
+
+    def copy_from(self, fh, table, sep):
+
+        self.cursor.copy_from(fh, table, sep)
 
 
 class SQLiteDB(CommonDB):
@@ -65,24 +80,17 @@ class SQLiteDB(CommonDB):
 
     def init(self):
 
-        query = '''
-                    CREATE TABLE IF NOT EXISTS users (
-                       id INT PRIMARY KEY      NOT NULL,
-                       name          CHAR(50)  NOT NULL,
-                       email         INT(100)  NOT NULL,
-                       inserted_at   INT,
-                       updated_at    INT
-                    );
-                '''
+        raise NotImplementedError
 
-        self.execute(query)
-        self.commit()
+    def copy_from(self, fh, table, sep):
+
+        raise NotImplementedError
 
 
 class DBFactory(object):
 
     @staticmethod
-    def create(db_type, init):
+    def create(db_type, init=False):
 
         if db_type == 'postgres':
 

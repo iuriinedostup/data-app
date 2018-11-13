@@ -13,13 +13,15 @@ class DataLoad(object):
         self.get_file_path()
 
         with open(self.file_path, 'r') as fh:
-            self.db_conn.cursor.copy_from(
-                fh,
-                'users',
+            self.db_conn.copy_from(
+                fh=fh,
+                table='users',
                 sep=','
             )
 
         self.db_conn.commit()
+
+        # @IURII - why does the code below fail? for some reason it can't find the file
 
         # query = """
         #     COPY users

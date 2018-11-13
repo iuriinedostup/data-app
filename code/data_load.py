@@ -1,7 +1,7 @@
 import argparse
 
-from db import DBFactory
-from loader import DataLoad
+from utils.db import DBFactory
+from utils.loader import DataLoad
 
 parser = argparse.ArgumentParser()
 
@@ -31,6 +31,8 @@ if __name__ == '__main__':
 
     loader = DataLoad(db)
     loader.execute()
+
+    db.close()
 
     print 'done'
 
