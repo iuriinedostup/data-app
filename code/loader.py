@@ -21,6 +21,20 @@ class DataLoad(object):
 
         self.db_conn.commit()
 
+        # query = """
+        #     COPY users
+        #     FROM '{}'
+        #     DELIMITER ','
+        #     CSV HEADER
+        #     ;
+        # """
+        #
+        # self.db_conn.execute(
+        #     query.format(
+        #         self.file_path
+        #     )
+        # )
+
     def get_file_path(self):
 
         file_name = 'MOCK_DATA2.csv'
