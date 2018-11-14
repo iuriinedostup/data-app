@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '-d',
     '--dbtype',
-    type = str,
+    type=str,
     dest='db_type',
     required=True
 )
