@@ -1,22 +1,38 @@
-from db import DBFactory
+import argparse
 
+from utils.db import DBFactory
+from utils.loader import DataLoad
 
-class DataLoad(object):
+parser = argparse.ArgumentParser()
 
-    def __init__(self, db_conn):
-        self.db_conn = db_conn
+parser.add_argument(
+    '-d',
+    '--dbtype',
+    type = str,
+    dest='db_type',
+    required=True
+)
 
-    def execute(self):
-        self.db_conn.execute(
-            'SELECT * FROM users'
-        )
+parser.add_argument(
+    '-i',
+    '--init',
+    action='store_true',
+    dest='init'
+)
+
 
 if __name__ == '__main__':
 
-    db = DBFactory.create('sqlite')
+    args = parser.parse_args()
+    db_type = args.db_type
+    init = args.init
+
+    db = DBFactory.create(db_type, init)
 
     loader = DataLoad(db)
     loader.execute()
+
+    db.close()
 
     print 'done'
 

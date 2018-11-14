@@ -1,30 +1,29 @@
-from db import DBFactory
+import argparse
 
+from utils.db import DBFactory
+from utils.transformer import DataTransform
 
-class DataTransform(object):
+parser = argparse.ArgumentParser()
 
-    def __init__(self, db_conn):
-        self.db_conn = db_conn
-
-    def execute(self):
-        users = self.db_conn.select('SELECT id, email, first_name, last_name FROM users')
-
-        users_list = []
-
-        for u in users:
-            users_list.append(
-                (u[0], u[1], "{} {}".format(u[2], u[3]))
-            )
-
-        return users_list
+parser.add_argument(
+    '-d',
+    '--dbtype',
+    type = str,
+    dest='db_type',
+    required=True
+)
 
 
 if __name__ == '__main__':
 
-    db = DBFactory.create('postgres')
+    args = parser.parse_args()
+    db_type = args.db_type
 
-    loader = DataTransform(db)
-    loader.execute()
+    db = DBFactory.create(db_type)
+
+    transformer = DataTransform(db)
+    transformer.execute()
+
+    db.close()
 
     print 'done'
-
