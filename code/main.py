@@ -5,22 +5,21 @@ from tasks.transform import TransformTaskFactory
 
 parser = argparse.ArgumentParser(description='Patterns App')
 
-parser.add_argument(
-    '--task',
-    dest='task',
-    choices=['load', 'transform']
-)
+task_map = {
+    'load': LoadTaskFactory,
+    'transform': TransformTaskFactory
+}
 
 
 if __name__ == '__main__':
 
+    sub_parsers = parser.add_subparsers(
+        description="Sub parser"
+    )
+
+    for name, f in task_map.iteritems():
+        subparser = sub_parsers.add_parser(name, help='{}: sub parser'.format(name))
+        factory = f.create(subparser)
+
     args = parser.parse_args()
-
-    if args.task == 'load':
-        task = LoadTaskFactory.create()
-    elif args.task == 'transform':
-        task = TransformTaskFactory.create()
-    else:
-        raise ValueError('Incorrect task name')
-
-    task.execute()
+    args.func(args)

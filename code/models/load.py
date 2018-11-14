@@ -1,8 +1,11 @@
 import os
-import pandas as pd
 
 
 class DataLoad(object):
+
+    @staticmethod
+    def create():
+        return DataLoad('')
 
     def __init__(self, db_conn):
 

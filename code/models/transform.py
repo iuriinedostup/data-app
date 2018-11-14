@@ -1,4 +1,3 @@
-import pandas as pd
 import StringIO
 import time
 
@@ -12,6 +11,8 @@ class DataTransform(object):
         self.output = None
 
     def execute(self):
+        print 'transform'
+        return 0
 
         self.get_data()
         self.get_count_by_extension()
